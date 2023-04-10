@@ -1,7 +1,7 @@
 package org.example.models;
 
 public class Card {
-    public enum Suit { HEARTS, DIAMONDS, CLUBS, SPADES }
+    public enum Suit { HEARTS, DIAMONDS, CLUBS, CLOVERS }
     public enum Rank { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
 
     private final Suit suit;
