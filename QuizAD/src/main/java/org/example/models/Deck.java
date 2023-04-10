@@ -20,6 +20,10 @@ public class Deck {
         return cards.remove(cards.size() - 1);
     }
 
+    public boolean isEmpty() {
+        return false;
+    }
+
     // Other utility methods
 }
 
