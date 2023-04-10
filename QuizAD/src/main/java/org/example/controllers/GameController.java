@@ -1,22 +1,27 @@
 package org.example.controllers;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import org.example.models.Game;
 import org.example.persistance.PersistenceManager;
 
 import java.util.Scanner;
 
 public class GameController {
+
     private final Scanner scanner = new Scanner(System.in);
     private final PersistenceManager persistenceManager = new PersistenceManager();
     private Game game;
     private boolean running;
-
+    
     public GameController() {
         loadOrCreateGame();
         running = true;
     }
-
-    public void start() {
+    
+    public void start() throws IOException {
         while (running) {
             displayMenu();
             int choice = scanner.nextInt();
@@ -41,10 +46,10 @@ public class GameController {
             }
         }
     }
-
+    
     private void loadOrCreateGame() {
         Game loadedGame = persistenceManager.loadGame();
-
+        
         if (loadedGame != null) {
             game = loadedGame;
             System.out.println("Game loaded.");
@@ -55,7 +60,7 @@ public class GameController {
             System.out.println("New game created.");
         }
     }
-
+    
     private void displayMenu() {
         System.out.println("\nMain Menu:");
         System.out.println("1. Play a round");
@@ -64,8 +69,8 @@ public class GameController {
         System.out.println("4. Quit");
         System.out.print("Enter your choice: ");
     }
-
-    private void playRound() {
+    
+    private void playRound() throws IOException {
         // Betting
         System.out.print("Enter your bet (10 to " + game.getPlayer().getCoins() + "): ");
         int bet = scanner.nextInt();
@@ -75,9 +80,10 @@ public class GameController {
             System.out.println("Invalid bet amount. Please try again.");
             return;
         }
-
+        
         game.getPlayer().subtractCoins(bet);
-
+        // save player txt 
+        savePlayerTxt("savePlayer");
         // Dealing cards
         game.getPlayer().getHand().addCard(game.getDeck().draw());
         game.getPlayer().getHand().addCard(game.getDeck().draw());
@@ -134,7 +140,7 @@ public class GameController {
             int dealerValue = game.getDealer().getHand().getValue();
             System.out.println("Your hand: " + game.getPlayer().getHand());
             System.out.println("Dealer's hand: " + game.getDealer().getHand());
-
+            
             if (playerValue > dealerValue) {
                 System.out.println("You won this round!");
                 game.getPlayer().addCoins(bet * 2);
@@ -150,13 +156,12 @@ public class GameController {
         game.getPlayer().getHand().getCards().clear();
         game.getDealer().getHand().getCards().clear();
     }
-
-
+    
     private void saveGame() {
         persistenceManager.saveGame(game);
         System.out.println("Game saved.");
     }
-
+    
     private void loadGame() {
         Game loadedGame = persistenceManager.loadGame();
         if (loadedGame != null) {
@@ -166,5 +171,18 @@ public class GameController {
             System.out.println("Error loading game.");
         }
     }
-}
 
+    private void savePlayerTxt(String name) throws IOException {
+        try {
+            File archi = new File(name + ".txt");
+            FileWriter fw = new FileWriter(archi, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            bw.write(game.getPlayer().toString());
+            bw.close();
+            fw.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
