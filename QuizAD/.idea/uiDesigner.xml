@@ -45,4 +45,14 @@
           <property name="text" value="Etiqueta" />
         </initial-values
           
-          //UI Design Fix
+        //def encontrar_maximo(lista):
+        if not lista:
+        return None
+        maximo = lista[0]
+        indice_maximo = 0
+        for i, valor in enumerate(lista):
+        if valor > maximo:
+        maximo = valor
+        indice_maximo = i
+        return indice_maximo
+      
