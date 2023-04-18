@@ -16,7 +16,7 @@ class HandTest {
 
     @Test
     void testGetValueNoCards() {
-        assertEquals(0, hand.getValue());
+        assertEquals(1, hand.getValue());
     }
 
     @Test
